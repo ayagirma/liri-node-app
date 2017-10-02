@@ -8,26 +8,8 @@ var myKeys = {
   access_token_secret: 'BavFIL5UmONXAEP8cyaH7ApHYDoIYkgnhw1kzEsXViPVn',
   mySpotifyId: 'b7da7ba9b17045458c03741e326f3340',
   mySpotifySecret: 'f83b7264327b4c1a9235c203b53b8700',
-  omdbapi:'40e9cece',
+  omdbapi:'40e9cece'
 }
-// var spotifyKeys = {
-//   id: 'b7da7ba9b17045458c03741e326f3340',
-//   secret: 'f83b7264327b4c1a9235c203b53b8700',
-// }
- // module.exports = spotifyKey;
+
  module.exports = myKeys;
 
-// fs.readFile('my-tweets.txt', 'utf8',function(err, data) {
-// 	if(err) {
-// 		 console.log(err);
-// 		 return;
-// 	};
-
-// var things = data.split(',');
-//  console.log('THIS ARE THE THINGS THAT SOME OTHER PERSON LOVES!');
-
-// for( var i=0; i<tweets.length; i++){
-// 	console.log(tweets[i].trim());
-
-//   }
-// });

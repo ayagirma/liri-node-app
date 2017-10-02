@@ -5,6 +5,7 @@ var twitter = require('twitter');
 var spotify = require('node-spotify-api');
 var fs = require('fs');
 var request = require('request');
+
 var mySpotify = new spotify({
    id: myKeys.mySpotifyId,
    secret: myKeys.mySpotifySecret
@@ -18,6 +19,7 @@ var mySpotify = new spotify({
   access_token_secret: myKeys.access_token_secret
 
  });
+
 
 console.log(process.argv[2]);
 
@@ -50,76 +52,69 @@ else if( process.argv[2]==="spotify-this-song") { // was 2
    
   });
 }
-
-
 //==================================================================================
 
-//initialize
-
-// 
-var request = require("request");
 // Store all of the arguments in an array
 var nodeArgs = process.argv;
 // Create an empty variable for holding the movie name
 var movieName = "";
+// Then run a request to the OMDB API with the movie specified
+var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=40e9cece";
+
 // Loop through all the words in the node argument
 // And do a little for-loop magic to handle the inclusion of "+"s
+for (var i = 2; i < nodeArgs.length; i++) {
 
-// Then run a request to the OMDB API with the movie specified
-request("http://www.omdbapi.com/?t=remember+the+titans&y=&plot=short&apikey=40e9cece", function(error, response, body) {
-  // If the request is successful (i.e. if the response status code is 200)
+  if (i > 2 && i < nodeArgs.length) {
+
+    movieName = movieName + " " + nodeArgs[i];
+  }
+  else {
+    movieName += nodeArgs[i];
+  }
+
+}
+
+request(queryUrl, function(error, response, body) {
+
+  // If the request is successful
   if (!error && response.statusCode === 200) {
 
-    for (var i = 2; i < nodeArgs.length; i++) {
-
-        if (i > 2 && i < nodeArgs.length) {
-        movieName = movieName + "+" + nodeArgs[i];
-        }
-        else {
-           movieName += nodeArgs[i];
-      }
-}
     // Parse the body of the site and recover just the imdbRating
     // (Note: The syntax below for parsing isn't obvious. Just spend a few moments dissecting it).
-   // console.log("The movie's rating is: " + JSON.parse(body).imdbRating);
-   // console.log("Title of the movie: " + JSON.parse(body).Mr.Nobody);
-   // console.log("Year the movie came out: " + JSON.parse(body).imdbRating);
-   // console.log("IMDB Rating of the movie: " + JSON.parse(body).imdbRating);
-   // console.log("Rotten Tomatoes Rating of the movie: " + JSON.parse(body).imdbRating);
-   // console.log("Country where the movie was produced: " + JSON.parse(body).imdbRating);
-   // console.log("Language of the movie: " + JSON.parse(body).imdbRating);
-   // console.log("Actors of the movie: " + JSON.parse(body).imdbRating);
-
+    console.log("Title of the movie: " + JSON.parse(body).title);
+    console.log("Year the movie came out: " + JSON.parse(body).year);
+    console.log("The movie's rating is: " + JSON.parse(body).imdbRating);
+    console.log("Rotten Tomatoes Rating of the movie: " + JSON.parse(body).tomatoes);
+    console.log("Country where the movie was produced: " + JSON.parse(body).country);
+    console.log("language of the movie: " + JSON.parse(body).language);
+    console.log("Plot of the movie: " + JSON.parse(body).plot);
+    console.log("Actors of the movie: " + JSON.parse(body).actors);
   }
-});
+  
+ });
 
 //=========================================================================================================
 
-// // store the text filename that given from the command line
+// //store the text filename that given from the command line
 
-//  var textFile = process.argv[2];
+//   var textFile = process.argv[3];
 
-// // // append the contents of random.txt
+//  // append the contents of random.txt
 
-// var contents =fs.readFileSync("./random.txt ", "utf-8", function(err, data){
-//   if(err){
+//  var contents = fs.readFileSync("./random.txt ", "utf-8", function(err, data){
+//    if(err){
 //     return console.log(err);
-//      console.log(contents.statusCode);
+//       console.log(data.statusCode);
 //   }
 
-//   // break the string down by comma separation and store 
-//   //into output array.
+//    // break the string down by comma separation and store into output array.
 
-//   var output = data.split(",");
+//    var output = contents.split(",");
 
 //   // loop through to the created output array
 //   for (var i =0; i<output.length; i++) {
 //     //print each element (item) of the array.
 //     console.log(output[i]);
-//   }
+//      }
 // });
-
- //=============================================================
-
-
-
