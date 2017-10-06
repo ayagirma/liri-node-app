@@ -5,10 +5,13 @@ var twitter = require('twitter');
 var spotify = require('node-spotify-api');
 var fs = require('fs');
 var request = require('request');
+var argv = process.argv[3];
+var textFile = process.argv[4];
 
 var mySpotify = new spotify({
    id: myKeys.mySpotifyId,
    secret: myKeys.mySpotifySecret
+  //var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=40e9cece";
 
  });
   // this is twitter
@@ -22,95 +25,91 @@ var mySpotify = new spotify({
 
 
 console.log(process.argv[2]);
-
-if(process.argv[2]==="my-tweets"){
-  console.log(process.argv[2]);
-  
-client.get('statuses/user_timeline', function(error, tweets, response) {
-  if (!error) {
-     console.log(tweets);
-     console.log(response.statusCode);
-  }
-
-   return console.log(error);
- });
+if(process.argv[2] == "my-tweets"){
+  mytweets();
+}else if(process.argv[2] == "spotify-this-song"){
+  spotifySong(argv);
+ }else{(process.argv[2] == "movie-this")
+ movie(argv);
 }
 
-else if( process.argv[2]==="spotify-this-song") { // was 2
-  var searchterm = process.argv[2]; // was 2
-  mySpotify.search({ type: 'track', query:searchterm }, function (error, data){
-    if (error) {
-       console.log('error occurred: ' + error);
-    };
-  console.log(data.tracks.items);
-  var songlist = data.tracks.items;
-  // creat a for loop to loop through song list and tack out individual songs 
-   for (var i =0; i<songlist.length; i++) {
-//     //print each element (item) of the array
-     console.log(songlist[i]);
-   }
-   
-  });
-}
-//==================================================================================
+// function movieThis(){
 
-// Store all of the arguments in an array
-var nodeArgs = process.argv;
-// Create an empty variable for holding the movie name
-var movieName = "";
-// Then run a request to the OMDB API with the movie specified
+// }
+function movie(title,year, rating,rottenTomatoRating, country,language, plot,actors){
+  this.title = title;
+  this.year = year;
+  this.rating = rating;
+  this.rottenTomatoRating = rottenTomatoRating
+  this.country = country;
+  this.language = language;
+  this.plot = plot;
+  this.actors = actors;
 var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=40e9cece";
 
-// Loop through all the words in the node argument
-// And do a little for-loop magic to handle the inclusion of "+"s
-for (var i = 2; i < nodeArgs.length; i++) {
+var movieName = '';
 
-  if (i > 2 && i < nodeArgs.length) {
+  request(queryUrl, function(error, response, body) {
 
-    movieName = movieName + " " + nodeArgs[i];
-  }
-  else {
-    movieName += nodeArgs[i];
-  }
+  // If the request is successful
+    for (var i = 8; i < response.length; i++){
+      if (!error && response.statusCode === 200) {
+      movieName.queryUrl.response([i]);
+      } else {
+         movieName += nodeArgs[i];
+      }
+      return;
+      }
+      //console.log(response);
+      console.log("===========================");
+      console.log(body);
+  });
+}
+
+function spotifySong(searchterm){
+   mySpotify.search({ type: 'track', query:searchterm, limit:'5'}, function (error, data){
+    if (error) {
+       console.log('error occurred: ' + error);
+     return;
+    };
+    var song = data.tracks.items;
+     console.log(song);
+    for(var i = 0; i<song.length; i++){
+      console.log(song[i].name);
+    }
+});
 
 }
 
-request(queryUrl, function(error, response, body) {
+ function mytweets (){
 
-  // If the request is successful
-  if (!error && response.statusCode === 200) {
-
-    // Parse the body of the site and recover just the imdbRating
-    // (Note: The syntax below for parsing isn't obvious. Just spend a few moments dissecting it).
-    console.log("Title of the movie: " + JSON.parse(body).title);
-    console.log("Year the movie came out: " + JSON.parse(body).year);
-    console.log("The movie's rating is: " + JSON.parse(body).imdbRating);
-    console.log("Rotten Tomatoes Rating of the movie: " + JSON.parse(body).tomatoes);
-    console.log("Country where the movie was produced: " + JSON.parse(body).country);
-    console.log("language of the movie: " + JSON.parse(body).language);
-    console.log("Plot of the movie: " + JSON.parse(body).plot);
-    console.log("Actors of the movie: " + JSON.parse(body).actors);
+  client.get('statuses/user_timeline', function(error, tweets, response) {
+  if (!error) {
+        for (var i = 0; i<tweets.length; i++){
+            console.log(tweets[i].created_at); // this is coming with the first tweet created
+            console.log(tweets[i].text)
+        }  
   }
-  
+  else{
+     return console.log(error);
+  }
  });
+}
 
-//=========================================================================================================
-
-// //store the text filename that given from the command line
-
-//   var textFile = process.argv[3];
+//=============================================================================
+ 
 
 //  // append the contents of random.txt
 
-//  var contents = fs.readFileSync("./random.txt ", "utf-8", function(err, data){
+//  var content = fs.readFileSync("./random.txt ", "utf-8", function(err, contents){
 //    if(err){
 //     return console.log(err);
-//       console.log(data.statusCode);
+//       console.log(contents.statusCode);
 //   }
 
 //    // break the string down by comma separation and store into output array.
 
-//    var output = contents.split(",");
+//    var output = content.split(",");
 
 //   // loop through to the created output array
 //   for (var i =0; i<output.length; i++) {
@@ -118,3 +117,56 @@ request(queryUrl, function(error, response, body) {
 //     console.log(output[i]);
 //      }
 // });
+
+
+ //==================================================================================
+
+ 
+
+ 
+   
+// // Store all of the arguments in an array
+// var nodeArgs = process.argv;
+// // Create an empty variable for holding the movie name
+// var movieName = "";
+// // Then run a request to the OMDB API with the movie specified
+// var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=40e9cece";
+
+// // Loop through all the words in the node argument
+// // And do a little for-loop magic to handle the inclusion of "+"s
+// for (var i = 2; i < nodeArgs.length; i++) {
+
+//   if (i > 2 && i < nodeArgs.length) {
+
+//     movieName = movieName + " " + nodeArgs[i];
+//   }
+//   else {
+//     movieName += nodeArgs[i];
+//   }
+
+// }
+
+// request(queryUrl, function(error, response, body) {
+
+//   // If the request is successful
+//   if (!error && response.statusCode === 200) {
+
+//     // Parse the body of the site and recover just the imdbRating
+//     // (Note: The syntax below for parsing isn't obvious. Just spend a few moments dissecting it).
+//     console.log("Title of the movie: " + JSON.parse(body).title);
+//     console.log("Year the movie came out: " + JSON.parse(body).year);
+//     console.log("The movie's rating is: " + JSON.parse(body).imdbRating);
+//     console.log("Rotten Tomatoes Rating of the movie: " + JSON.parse(body).tomatoes);
+//     console.log("Country where the movie was produced: " + JSON.parse(body).country);
+//     console.log("language of the movie: " + JSON.parse(body).language);
+//     console.log("Plot of the movie: " + JSON.parse(body).plot);
+//     console.log("Actors of the movie: " + JSON.parse(body).actors);
+//   }
+  
+//  });
+
+// //=========================================================================================================
+
+//==========================================================================
+
+  
